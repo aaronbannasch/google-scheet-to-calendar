@@ -1,0 +1,49 @@
+
+
+//since Face to Face isn't a sync session we don't need the Adobe Connect info so just write in the values for general class info.
+//push new events to calendar
+function pushF2FDatesToCal() {
+   
+  //spreadsheet variables
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var lastRow = sheet.getLastRow(); 
+  var range = sheet.getRange(2,1,lastRow,21);
+  var values = range.getValues();   
+       
+     Logger.log(values.length);
+  
+ 
+
+  //calendar variables
+  var calendar = CalendarApp.getCalendarById('u.northwestern.edu_3kfpsjbk33s89u98ceglkr37i8@group.calendar.google.com');
+   
+   
+  var numValues = 0;
+  for (var i = 0; i < values.length; i++) {  
+       if ((values[i][5].length > 0) && (values[i][6].length > 0) && (values[i][9] == 'Face to Face' )) {
+        
+        //check if it's been entered before
+        if (values[i][19] != 'Calendar Event Created') {
+          
+          //create event
+          var newF2FTitle = values[i][17] + ' ' + values[i][5] + ' ' + values[i][6] + ' ' + values[i][9];
+          
+           Logger.log(i);
+          
+          
+          var dF2FContents = values[i][7] + ' ' + values[i][8];
+var newF2FEvent = calendar.createEvent(newF2FTitle, new Date(values[i][3]), new Date(values[i][4]), {description: dF2FContents});
+       Logger.log(newF2FEvent);         
+        //get ID
+        var newF2FEventId = newF2FEvent.getId();
+         
+        //mark as entered, enter ID
+        sheet.getRange(i+2,19).setValue('Calendar Event Created');
+        sheet.getRange(i+2,20).setValue(newF2FEventId);
+        
+      }
+      }
+            numValues++;
+  }
+   
+      }
