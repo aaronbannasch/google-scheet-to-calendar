@@ -1,0 +1,52 @@
+//push new events to calendar
+function pushSyncDatesToCal() {
+   
+  //spreadsheet variables
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var lastRow = sheet.getLastRow(); 
+  var range = sheet.getRange(2,1,lastRow,21);
+  var values = range.getValues();   
+       
+     Logger.log(values.length);
+  
+ 
+
+  //calendar variables, put in your Google Calendar ID
+  var calendar = CalendarApp.getCalendarById('CALENDAR ID GOES HERE');
+   
+   
+  var numValues = 0;
+  for (var i = 0; i < values.length; i++) {     
+    //check to see if name and type are filled out - date is left off because length is "undefined"
+    if ((values[i][5].length > 0) && (values[i][6].length > 0) && (values[i][9] == 'NU Sync Session' )) {
+       
+      //check if it's been entered before          
+      if (values[i][19] != 'Calendar Event Created') {                       
+         
+        //create event https://developers.google.com/apps-script/class_calendarapp#createEvent
+        var newSyncTitle = values[i][17] + ' ' + values[i][5] + ' ' + values[i][6] + ' ' + values[i][9];
+
+          Logger.log(i);
+
+
+
+        var dSyncContents = values[i][7] + " " + values[i][8] + " " + values[i][9] + "\n" + '-------------------' + "\n" + 'Adobe Connect Link: '  + values[i][10] 
+        + "\n" + '-------------------' + "\n" + "\n" + 'India Dial-in: ' + values[i][13] + ' ' +  'US Dial-in: ' + values[i][14] + "\n" + "\n" +  'Host Code: ' + values[i][15] + ' ' +  'Participant Code: ' + values[i][16];      
+var newSyncEvent = calendar.createEvent(newSyncTitle, new Date(values[i][3]), new Date(values[i][4]), {description: dSyncContents});
+       Logger.log(newSyncEvent);         
+        //get ID
+        var newSyncEventId = newSyncEvent.getId();
+         
+        //mark as entered, enter ID
+        sheet.getRange(i+2,19).setValue('Calendar Event Created');
+        sheet.getRange(i+2,20).setValue(newSyncEventId);
+          
+         
+      } //could edit here with an else statement
+    }
+        
+  
+    numValues++;
+  }
+   
+      }
