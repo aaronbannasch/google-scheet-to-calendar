@@ -15,7 +15,7 @@ function pushF2FDatesToCal() {
  
 
   //calendar variables
-  var calendar = CalendarApp.getCalendarById('u.northwestern.edu_3kfpsjbk33s89u98ceglkr37i8@group.calendar.google.com');
+  var calendar = CalendarApp.getCalendarById('GOOGLE CALENDAR ID GOES HERE');
    
    
   var numValues = 0;
